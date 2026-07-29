@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial · Sistemas de Información · 13 Claves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1f26; --ink2:#565b66; --paper:#f3f1e9; --sheet:#fffdf6;
+  --wine:#7d1f30; --wine2:#5a1522; --wineD:#47101c; --gold:#c9a227; --line:#d9d3c2;
+  --disp:'Bricolage Grotesque',sans-serif; --body:'Instrument Sans',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);color:var(--ink);min-height:100vh;
+  background:
+    radial-gradient(1100px 520px at 85% -8%, rgba(125,31,48,.09), transparent 60%),
+    radial-gradient(800px 500px at -10% 30%, rgba(201,162,39,.07), transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(28,31,38,.045) 23px 24px),
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(28,31,38,.045) 23px 24px),
+    var(--paper);
+}
+button{font-family:var(--body)}
+.top-strip{background:var(--wine);color:#f6ead6;border-bottom:3px solid var(--gold);
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 22px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+/* ============ MASTHEAD ============ */
+.masthead{max-width:1180px;margin:0 auto;padding:36px 22px 14px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--wine);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.kicker::before{content:'';width:34px;height:2px;background:var(--wine)}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(46px,7.5vw,88px);line-height:.92;letter-spacing:-.02em;margin:10px 0 12px}
+h1 .hueca{color:transparent;-webkit-text-stroke:2px var(--wine)}
+.meta-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip-meta{border:1.5px solid var(--ink);background:var(--sheet);padding:5px 11px;font-size:12px;font-weight:600;display:flex;gap:6px;align-items:center;transition:.2s}
+.chip-meta:hover{background:var(--ink);color:var(--sheet);transform:translateY(-2px)}
+.stamp{width:116px;height:116px;flex:none;transform:rotate(-8deg);filter:drop-shadow(0 6px 10px rgba(90,21,34,.25))}
+.stamp .ring{animation:spin 28s linear infinite;transform-origin:60px 60px}
+.stamp text{font-family:var(--mono);font-size:9.2px;letter-spacing:.24em;fill:var(--wine)}
+.stamp .n{font-family:var(--disp);font-size:34px;font-weight:800;fill:var(--wine);letter-spacing:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ PORTAL ============ */
+.gate{max-width:1180px;margin:14px auto 26px;padding:0 22px;display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:stretch}
+.gate-card{animation:rise .55s ease both}
+.gate-card.doc{animation-delay:.12s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+.gate-est{background:var(--sheet);border:1.5px solid var(--ink);padding:26px 28px 28px;position:relative;box-shadow:0 24px 44px -30px rgba(28,31,38,.45)}
+.gate-est::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--wine) 0 62%,var(--gold) 62% 100%)}
+.gate-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.gate-head .gnum{font-family:var(--disp);font-weight:800;font-size:44px;color:var(--wine);line-height:1}
+.gate-head h2{font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:-.01em}
+.gate-head .mono-tag{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink2);border:1px solid var(--line);padding:4px 9px}
+.gate-est>p{font-size:13.5px;color:var(--ink2);margin-bottom:14px;max-width:580px}
+.clave-input-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.clave-input-row label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+#inputClave{width:92px;border:1.5px solid var(--ink);background:#fff;padding:9px 10px;font-family:var(--mono);font-size:17px;font-weight:800;text-align:center;outline:none;transition:.2s;color:var(--wine)}
+#inputClave:focus{border-color:var(--wine);box-shadow:0 0 0 3px rgba(125,31,48,.15)}
+.grid-claves{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:9px}
+.gcl{position:relative;background:#fff;border:1.5px solid var(--ink);padding:9px 8px 9px 19px;cursor:pointer;text-align:left;transition:transform .2s, box-shadow .2s, background .2s}
+.gcl::before{content:'';position:absolute;left:8px;top:5px;bottom:5px;border-left:2px dashed var(--line)}
+.gcl .lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:var(--ink2)}
+.gcl .num{font-family:var(--disp);font-weight:800;font-size:26px;line-height:1.05;margin:2px 0 6px}
+.dots{display:grid;grid-template-columns:repeat(6,4px);gap:2px}
+.dots i{width:4px;height:4px;border-radius:50%;background:#ddd6c2;transition:.25s}
+.dots i.f{background:var(--wine)}
+.gcl:hover{transform:translateY(-4px);box-shadow:0 10px 16px -9px rgba(28,31,38,.4)}
+.gcl.sel{background:var(--wine);border-color:var(--wine2);color:#fff;transform:translateY(-4px);box-shadow:0 12px 22px -9px rgba(90,21,34,.55)}
+.gcl.sel .lbl{color:var(--gold)} .gcl.sel .dots i{background:rgba(255,255,255,.3)} .gcl.sel .dots i.f{background:var(--gold)}
+.gate-cta{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:20px;border-top:1px solid var(--line);padding-top:18px}
+.sel-info{font-size:13.5px;color:var(--ink2)}
+.sel-info b{font-family:var(--mono);font-size:16px;color:var(--wine);letter-spacing:.08em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;font-size:13.5px;font-weight:700;cursor:pointer;transition:transform .18s, box-shadow .18s, background .18s;border-radius:2px}
+.btn-solid{background:var(--wine);color:#fff;border:1.5px solid var(--wine2)}
+.btn-solid:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 18px -8px rgba(90,21,34,.6)}
+.btn-solid:disabled{background:#c9c2b0;border-color:#b3ac99;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:var(--sheet);transform:translateY(-2px)}
+
+.gate-doc{background:linear-gradient(160deg,var(--wineD),var(--wine2) 70%);border:2px dashed var(--gold);color:#f6ead6;
+  padding:30px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;position:relative;overflow:hidden}
+.gate-doc::after{content:'';position:absolute;right:-46px;bottom:-46px;width:170px;height:170px;border:2px dashed rgba(201,162,39,.35);border-radius:50%;animation:spin 40s linear infinite}
+.seal{width:58px;height:58px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:24px;background:rgba(0,0,0,.18);box-shadow:0 0 0 5px rgba(201,162,39,.12)}
+.gate-doc h2{font-family:var(--disp);font-weight:800;font-size:26px}
+.gate-doc p{font-size:13px;color:#e8cfb4;line-height:1.45}
+.gate-doc input{width:100%;background:rgba(0,0,0,.25);border:1.5px solid rgba(201,162,39,.6);color:#fff;padding:12px 14px;font-family:var(--mono);font-size:14px;letter-spacing:.1em;outline:none;transition:.2s}
+.gate-doc input::placeholder{color:rgba(246,234,214,.45)}
+.gate-doc input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.2)}
+.btn-gold{background:var(--gold);color:var(--wineD);border:1.5px solid #a8861d;font-weight:800;width:100%}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 20px -8px rgba(0,0,0,.5)}
+.err{display:none;color:#ffb3a8;font-size:12px;font-weight:600}
+.err.show{display:block}
+.gate-doc.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.gate-note{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,234,214,.55);margin-top:auto}
+.pie{max-width:1180px;margin:0 auto;padding:6px 22px 44px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--ink2);text-transform:uppercase}
+
+/* ============ VISTA ESTUDIANTE (SOLO LECTURA) ============ */
+.exam-topbar{position:sticky;top:0;z-index:40;background:var(--ink);color:#f2ede0;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 22px;flex-wrap:wrap;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.tb-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tb-inst{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#b9b1a0}
+.tb-clave{background:var(--wine);padding:5px 13px;font-family:var(--mono);font-size:12px;letter-spacing:.14em}
+.tb-clave b{font-weight:800;color:var(--gold)}
+.tb-lectura{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;color:var(--gold);border:1px solid var(--gold);padding:4px 10px;display:flex;gap:7px;align-items:center}
+.tb-lectura::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.2}}
+.tb-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tb-notice{font-size:12.5px;font-weight:600;color:#e8cfb4}
+.tb-btn{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#f2ede0;padding:7px 14px;font-weight:700;font-size:12px;cursor:pointer;transition:.2s;border-radius:2px}
+.tb-btn:hover{background:#fff;color:var(--ink)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:26px;max-width:1180px;margin:26px auto 70px;padding:0 22px;align-items:start}
+.sheet{background:var(--sheet);border:1px solid var(--line);padding:32px 36px 40px;position:relative;box-shadow:inset 0 1px 0 #fff, 0 26px 50px -30px rgba(28,31,38,.4)}
+.sheet::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--wine) 0 62%,var(--gold) 62% 100%)}
+.sheet-head{border-bottom:3px double var(--wine);padding-bottom:14px;margin-bottom:16px}
+.sheet-head .inst{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.sheet-head .row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:8px}
+.sheet-head h2{font-family:var(--disp);font-weight:800;font-size:26px}
+.clave-box{border:2px solid var(--wine);color:var(--wine);padding:6px 16px;text-align:center;background:#fdf6ef}
+.clave-box small{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.2em}
+.clave-box b{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:16px 0}
+.campo label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin-bottom:3px}
+.linea{border-bottom:1.5px dotted #b6ad97;height:21px;font-size:13.5px;padding:0 2px}
+.instrucciones{border:1px solid var(--line);background:#faf6ea;padding:13px 16px;margin-bottom:8px}
+.instrucciones h3{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--wine);margin-bottom:7px}
+.instrucciones ol{padding-left:18px;font-size:12.5px;color:var(--ink2);display:grid;gap:3.5px}
+
+.q{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:17px 0 15px;border-top:1px solid var(--line);opacity:0;transform:translateY(16px);transition:opacity .5s ease, transform .5s ease}
+.q.vis{opacity:1;transform:none}
+.qn-num{font-family:var(--mono);font-weight:800;font-size:16px;color:var(--wine);display:block}
+.qn .chip{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:8px;letter-spacing:.14em;padding:2.5px 7px;border:1.2px solid currentColor;border-radius:2px}
+.qt{font-size:14.5px;font-weight:600;line-height:1.45;margin-bottom:9px}
+.ops{display:grid;gap:2px}
+.op-ro{display:flex;gap:10px;align-items:flex-start;padding:6px 11px}
+.circ{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%;margin-top:2px;flex:none;opacity:.7}
+.op-ro .lt{font-family:var(--mono);font-size:12px;font-weight:600;margin-top:2px;color:var(--ink2);flex:none}
+.op-ro .txt{font-size:13.5px;line-height:1.4}
+.fin-hoja{text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--wine);border-top:3px double var(--wine);margin-top:6px;padding-top:16px}
+.firma{margin-top:26px;font-size:13px;color:var(--ink2)}
+.firma span{display:inline-block;width:260px;border-bottom:1px solid var(--ink)}
+
+.panel{position:sticky;top:70px;display:grid;gap:14px}
+.card{background:var(--sheet);border:1.5px solid var(--ink);padding:16px 17px;transition:box-shadow .2s}
+.card:hover{box-shadow:0 10px 22px -14px rgba(28,31,38,.4)}
+.card h3{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--ink2);text-transform:uppercase;margin-bottom:10px}
+.clave-grande{font-family:var(--disp);font-weight:800;font-size:64px;line-height:1;color:var(--wine)}
+.dots.big{grid-template-columns:repeat(6,7px);gap:3px;margin:12px 0 4px}
+.dots.big i{width:7px;height:7px}
+.card .hint{font-size:11.5px;color:var(--ink2);margin-top:9px;line-height:1.45}
+.paso{padding-left:18px;font-size:12.5px;color:var(--ink2);display:grid;gap:7px;line-height:1.4}
+.paso b{color:var(--ink)}
+
+/* ============ PANEL DOCENTE ============ */
+.board-head{background:var(--wine);color:#fff;border-bottom:4px solid var(--gold);padding:20px 26px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.board-head .mono-k{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--gold)}
+.board-head h2{font-family:var(--disp);font-weight:800;font-size:clamp(20px,3vw,28px);margin-top:4px}
+.board-tools{display:flex;gap:10px;align-items:center}
+.code-chip{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.12);border:1px dashed var(--gold);color:var(--gold);padding:7px 12px;letter-spacing:.1em;filter:blur(4px);transition:.25s;cursor:pointer}
+.code-chip:hover{filter:blur(0)}
+.btn-salir{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);padding:8px 14px;font-weight:700;font-size:12.5px;cursor:pointer;transition:.2s;border-radius:2px}
+.btn-salir:hover{background:#fff;color:var(--wine)}
+.tabs{display:flex;gap:4px;max-width:1180px;margin:24px auto 0;padding:0 26px;flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:10px 17px;border:1.5px solid var(--ink);border-bottom:none;background:transparent;cursor:pointer;color:var(--ink2);transition:.2s;border-radius:3px 3px 0 0}
+.tab:hover{color:var(--wine)}
+.tab.sel{background:var(--ink);color:var(--sheet)}
+.tabsec{max-width:1180px;margin:0 auto 60px;padding:22px 26px;border-top:1.5px solid var(--ink)}
+.tab-tools{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:2px;overflow:hidden}
+.seg button{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:8px 14px;background:var(--sheet);border:none;cursor:pointer;color:var(--ink2);transition:.18s}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button.sel{background:var(--wine);color:#fff}
+.leyenda{font-size:12px;color:var(--ink2)}
+.btn-mini{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:8px 14px;border:1.5px solid var(--ink);background:var(--sheet);cursor:pointer;font-weight:600;transition:.2s;border-radius:2px}
+.btn-mini:hover{background:var(--ink);color:var(--sheet)}
+.table-scroll{overflow-x:auto;background:var(--sheet);border:1.5px solid var(--ink);box-shadow:0 18px 34px -24px rgba(28,31,38,.4)}
+.mtable{border-collapse:collapse;font-family:var(--mono);font-size:12px;width:100%;min-width:640px}
+.mtable th,.mtable td{border:1px solid var(--line);padding:7px 5px;text-align:center;min-width:38px;transition:background .12s}
+.mtable thead th{background:var(--wine);color:#fff;font-size:10.5px;letter-spacing:.06em}
+.mtable tbody th{background:#efe8d6;font-size:11px}
+.mtable td.hl{background:#f5e3b4;font-weight:800}
+.mtable tr.hlrow td{background:#faf4e2}
+.mtable tr.hlrow td.hl{background:#efd98f}
+.mtable.dtable td:nth-child(4){font-weight:800;color:var(--wine);font-size:13px}
+.mtable.dtable td:nth-child(3){text-align:left;font-family:var(--body);font-size:12.5px}
+.clave-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.cchip{font-family:var(--mono);font-weight:800;font-size:12px;width:44px;height:38px;border:1.5px solid var(--ink);background:var(--sheet);cursor:pointer;transition:.18s;border-radius:2px}
+.cchip:hover{transform:translateY(-3px)}
+.cchip.sel{background:var(--wine);color:#fff;border-color:var(--wine2)}
+.retro-sec{margin-bottom:24px}
+.retro-sec h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 12px;border:1.5px solid currentColor;display:inline-block;margin-bottom:12px;background:var(--sheet)}
+.retro-item{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:12px 15px;border:1px solid var(--line);background:var(--sheet);margin-bottom:8px;transition:.2s;align-items:start}
+.retro-item:hover{transform:translateX(5px);border-color:var(--wine);box-shadow:-5px 0 0 var(--wine)}
+.ans-badge{width:36px;height:36px;background:var(--wine);color:#fff;font-family:var(--disp);display:grid;place-items:center;font-weight:800;font-size:17px}
+.retro-item .ok{font-weight:600;font-size:13.5px;line-height:1.4}
+.retro-item .jus{font-size:12.5px;color:var(--ink2);margin-top:4px;font-style:italic;line-height:1.45}
+.dl-row{display:grid;grid-template-columns:60px 1fr auto;gap:20px;align-items:center;background:var(--sheet);border:1.5px solid var(--ink);padding:18px 22px;margin-bottom:12px;transition:.22s}
+.dl-row:hover{transform:translateX(7px);box-shadow:-7px 0 0 var(--wine)}
+.dl-row .em{font-size:30px}
+.dl-row h4{font-family:var(--disp);font-weight:800;font-size:17px;margin-bottom:3px}
+.dl-row p{font-size:12.5px;color:var(--ink2);line-height:1.45}
+.dl-row .act{display:flex;gap:8px;align-items:center}
+.dl-row select{border:1.5px solid var(--ink);background:#fff;padding:9px 10px;font-family:var(--mono);font-size:12px;border-radius:2px}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,90px);background:var(--ink);color:var(--sheet);
+  font-size:13px;font-weight:600;padding:12px 22px;border-left:4px solid var(--gold);box-shadow:0 16px 30px -12px rgba(0,0,0,.5);
+  transition:transform .35s cubic-bezier(.4,1.3,.5,1);z-index:90;max-width:90vw}
+#toast.show{transform:translate(-50%,0)}
+
+@media (max-width:1000px){
+  .gate{grid-template-columns:1fr}
+  .layout{grid-template-columns:1fr}
+  .panel{position:static;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .sheet{padding:24px 20px 32px}
+  .q{grid-template-columns:44px 1fr}
+  .dl-row{grid-template-columns:1fr;gap:10px}
+}
+@media print{
+  .exam-topbar,.panel,.top-strip{display:none!important}
+  body{background:#fff}
+  .layout{display:block;margin-top:0}
+  .sheet{box-shadow:none;border:none}
+  .q{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="top-strip">
+  <span>Corporación Universitaria Remington · Sede Yopal</span>
+  <span>Facultad de Ingenierías · Ingeniería de Sistemas</span>
+</div>
+
+<!-- ================= PORTAL ================= -->
+<section id="vistaPortal">
+  <header class="masthead">
+    <div>
+      <div class="kicker">Sistemas de Información · Periodo 2026-2</div>
+      <h1>EXAMEN<br><span class="hueca">PARCIAL</span></h1>
+      <div class="meta-chips">
+        <span class="chip-meta">⏱ 90 minutos</span>
+        <span class="chip-meta">✎ 25 preguntas</span>
+        <span class="chip-meta">◆ 5.0 puntos</span>
+        <span class="chip-meta">👤 Mg. Julio Andrés Silva Aragón</span>
+      </div>
+    </div>
+    <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
+      <defs><path id="cir" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+      <circle cx="60" cy="60" r="56" fill="none" stroke="#7d1f30" stroke-width="2.4" stroke-dasharray="5 3.5"/>
+      <circle cx="60" cy="60" r="34" fill="none" stroke="#7d1f30" stroke-width="1.2"/>
+      <g class="ring"><text><textPath href="#cir">CONTROL DE VERSIONES · CLAVES 1–13 · USO ACADÉMICO ·</textPath></text></g>
+      <text x="60" y="71" text-anchor="middle" class="n">13</text>
+    </svg>
+  </header>
+
+  <div class="gate">
+    <div class="gate-card gate-est">
+      <div class="gate-head">
+        <span class="gnum">01</span><h2>Soy estudiante</h2>
+        <span class="mono-tag">CONSULTA DE ORDEN</span>
+      </div>
+      <p>Coloque su <b>clave</b> para ver las 25 preguntas en el orden que le corresponde. <b>Responda en su hoja física</b>: la pantalla es solo su guía de orden.</p>
+      <div class="clave-input-row">
+        <label for="inputClave">Ingrese su clave (1–13)</label>
+        <input id="inputClave" type="number" min="1" max="13" placeholder="Ej: 7">
+      </div>
+      <div class="grid-claves" id="gridClaves"></div>
+      <div class="gate-cta">
+        <div class="sel-info">Clave seleccionada: <b id="selInfo">—</b></div>
+        <button class="btn btn-solid" id="btnComenzar" disabled>Ver mi examen →</button>
+      </div>
+    </div>
+
+    <div class="gate-card gate-doc" id="gateDoc">
+      <div class="seal">🔒</div>
+      <h2>Soy docente</h2>
+      <p>Panel para revisar las claves, las tablas de respuestas y generar los PDF para imprimir.</p>
+      <input type="password" id="codigoDoc" placeholder="Código de acceso" autocomplete="off">
+      <p class="err" id="errDoc">Código incorrecto. Intente de nuevo.</p>
+      <button class="btn btn-gold" id="btnDesbloquear">Desbloquear panel</button>
+      <div class="gate-note">Uso exclusivo del docente</div>
+    </div>
+  </div>
+
+  <footer class="pie">Documento para uso académico · Sistemas de Información · Uniremington Yopal · 2026-2</footer>
+</section>
+
+<!-- ================= VISTA ESTUDIANTE (SOLO LECTURA) ================= -->
+<section id="vistaEstudiante" hidden>
+  <div class="exam-topbar">
+    <div class="tb-left">
+      <span class="tb-inst">Uniremington · Sistemas de Información · Parcial 2026-2</span>
+      <span class="tb-clave">CLAVE <b id="tbClave">01</b></span>
+      <span class="tb-lectura">SOLO LECTURA</span>
+    </div>
+    <div class="tb-right">
+      <span class="tb-notice">📝 Responda en su hoja física</span>
+      <button class="tb-btn" id="btnCambiar">← Cambiar clave</button>
+    </div>
+  </div>
+
+  <main class="layout">
+    <article class="sheet">
+      <div class="sheet-head">
+        <div class="inst">Corporación Universitaria Remington — Sede Yopal · Facultad de Ingenierías · Ingeniería de Sistemas · Sistemas de Información</div>
+        <div class="row">
+          <h2>Examen Parcial Escrito</h2>
+          <div class="clave-box"><small>CLAVE ASIGNADA</small><b id="claveTitulo">01</b></div>
+        </div>
+      </div>
+      <div class="campos">
+        <div class="campo"><label>Estudiante</label><div class="linea"></div></div>
+        <div class="campo"><label>Código</label><div class="linea"></div></div>
+        <div class="campo"><label>Programa</label><div class="linea">Ingeniería de Sistemas</div></div>
+        <div class="campo"><label>Semestre</label><div class="linea"></div></div>
+        <div class="campo"><label>Fecha</label><div class="linea">30/07/2026</div></div>
+        <div class="campo"><label>Duración</label><div class="linea">90 minutos</div></div>
+        <div class="campo"><label>Docente</label><div class="linea">Mg. Julio Andrés Silva Aragón</div></div>
+        <div class="campo"><label>Calificación</label><div class="linea"></div></div>
+      </div>
+      <div class="instrucciones">
+        <h3>Instrucciones generales</h3>
+        <ol>
+          <li>La prueba consta de 25 preguntas de selección múltiple con única respuesta correcta.</li>
+          <li>Rellene completamente el círculo (○ → ●) de la opción que considere correcta en su <b>hoja física</b>. Use esfero de tinta negra o azul.</li>
+          <li>Cada pregunta tiene un valor de 0.2 puntos, para un total de 5.0. No se descuentan puntos por respuestas incorrectas.</li>
+          <li>Las preguntas con tachones, enmendaduras o con más de un círculo marcado se califican como incorrectas.</li>
+          <li>Prueba individual. No se permite el uso de dispositivos electrónicos, apuntes ni material de consulta.</li>
+          <li>Lea completamente cada enunciado y todas las opciones antes de marcar.</li>
+        </ol>
+      </div>
+      <div id="preguntas"></div>
+      <div class="fin-hoja">FIN DE LA PRUEBA — VERIFIQUE QUE HAYA RESPONDIDO LAS 25 PREGUNTAS</div>
+      <div class="firma">Firma del estudiante: <span></span></div>
+    </article>
+
+    <aside class="panel">
+      <div class="card">
+        <h3>Su clave</h3>
+        <div class="clave-grande" id="claveGrande">01</div>
+        <div class="dots big" id="claveDots"></div>
+        <p class="hint">Las 25 preguntas de esta pantalla están en el <b>orden exacto</b> de su clave. Úselas como guía mientras responde en su hoja física.</p>
+      </div>
+      <div class="card">
+        <h3>Cómo responder</h3>
+        <ol class="paso">
+          <li>Lea cada pregunta en <b>pantalla</b>, en el orden mostrado.</li>
+          <li>Marque su respuesta en la <b>hoja física</b> entregada por el docente.</li>
+          <li>Marque un único círculo (○ → ●) por pregunta.</li>
+          <li>Al terminar, verifique haber respondido las <b>25 preguntas</b>.</li>
+          <li>Ante cualquier novedad, levante la mano y avise al docente.</li>
+        </ol>
+      </div>
+      <button class="btn btn-ghost" id="btnCambiar2">← Cambiar clave</button>
+    </aside>
+  </main>
+</section>
+
+<!-- ================= PANEL DOCENTE ================= -->
+<section id="vistaDocente" hidden>
+  <header class="board-head">
+    <div>
+      <span class="mono-k">PANEL DOCENTE · USO EXCLUSIVO</span>
+      <h2>Claves de respuestas y retroalimentación — 13 versiones</h2>
+    </div>
+    <div class="board-tools">
+      <span class="code-chip" title="Pase el cursor para revelar">uniremington15</span>
+      <button class="btn-salir" id="cerrarPanel">✕ Salir del panel</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab sel" data-tab="maestra">Tabla maestra</button>
+    <button class="tab" data-tab="detalle">Detalle por clave</button>
+    <button class="tab" data-tab="retro">Retroalimentación</button>
+    <button class="tab" data-tab="descargas">Descargas PDF</button>
+  </nav>
+
+  <section class="tabsec" id="tab-maestra">
+    <div class="tab-tools">
+      <div class="seg" id="segModo">
+        <button data-m="r" class="sel">Respuestas</button>
+        <button data-m="p">Preg. original</button>
+        <button data-m="a">Ambas</button>
+      </div>
+      <span class="leyenda">Filas = posición en el examen · Columnas = clave asignada al estudiante</span>
+      <button class="btn-mini" id="copiar">⧉ Copiar tabla</button>
+    </div>
+    <div class="table-scroll" id="maestra"></div>
+  </section>
+
+  <section class="tabsec" id="tab-detalle" hidden>
+    <div class="clave-chips" id="chipsDetalle"></div>
+    <div class="table-scroll" id="detalle"></div>
+  </section>
+
+  <section class="tabsec" id="tab-retro" hidden>
+    <div id="retro"></div>
+  </section>
+
+  <section class="tabsec" id="tab-descargas" hidden>
+    <div class="dl-row">
+      <span class="em">📄</span>
+      <div><h4>Examen de una clave (para estudiantes)</h4>
+      <p>PDF con encabezado institucional, campos del estudiante, instrucciones y las 25 preguntas en el orden de la clave elegida. Listo para imprimir y entregar.</p></div>
+      <div class="act"><select class="selClave"></select><button class="btn btn-solid" id="dlExamen">⬇ PDF</button></div>
+    </div>
+    <div class="dl-row">
+      <span class="em">📚</span>
+      <div><h4>Paquete completo · 13 exámenes</h4>
+      <p>Un único PDF con las 13 versiones del parcial, cada una identificada con su clave. Ideal para imprimir todo el paquete de una sola vez.</p></div>
+      <div class="act"><button class="btn btn-solid" id="dlPaquete">⬇ 13 exámenes</button></div>
+    </div>
+    <div class="dl-row">
+      <span class="em">🖊️</span>
+      <div><h4>Hojas de respuestas · las 13 claves (3 por página carta)</h4>
+      <p>Un único PDF con las <b>13 tablas, una por cada clave, sin repetir</b>: 3 hojas por página carta (5 páginas en total), cada una con espacio para <b>nombre</b> y <b>documento de identidad</b>, la <b>clave impresa</b>, firma, línea de recorte y 25 círculos para marcar.</p></div>
+      <div class="act"><button class="btn btn-solid" id="dlHojas">⬇ 13 hojas</button></div>
+    </div>
+    <div class="dl-row">
+      <span class="em">🗝️</span>
+      <div><h4>Clave de respuestas y retroalimentación</h4>
+      <p>Tabla maestra de las 13 claves, detalle pregunta por pregunta y la justificación de cada respuesta. Incluye el código de acceso del docente.</p></div>
+      <div class="act"><button class="btn btn-solid" id="dlRespuestas">⬇ Respuestas</button></div>
+    </div>
+  </section>
+</section>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ================= DATOS ================= */
+const SECCIONES=[null,
+  {rom:"I",  tag:"TGS",    nombre:"Teoría General de Sistemas",              rgb:[125,31,48]},
+  {rom:"II", tag:"ABIERTO",nombre:"El SI como Sistema Abierto",              rgb:[46,77,120]},
+  {rom:"III",tag:"TPS",    nombre:"Sist. de Procesamiento de Transacciones", rgb:[31,111,107]},
+  {rom:"IV", tag:"MIS",    nombre:"Sistemas de Información Gerencial",       rgb:[138,106,21]},
+  {rom:"V",  tag:"DSS",    nombre:"Sistemas de Soporte a la Decisión",       rgb:[107,63,125]},
+  {rom:"VI", tag:"ERP",    nombre:"Planificación de Recursos Empresariales", rgb:[138,74,31]},
+  {rom:"VII",tag:"CRM",    nombre:"Gestión de la Relación con el Cliente",   rgb:[47,107,58]}];
+const COLSEC=[,"#7d1f30","#2e4d78","#1f6f6b","#8a6a15","#6b3f7d","#8a4a1f","#2f6b3a"];
+
+const PREGUNTAS=[
+ {s:1,a:1,q:"Según Ludwig von Bertalanffy, el propósito fundamental de la Teoría General de Sistemas es:",o:["Estudiar cada disciplina científica de manera aislada para lograr mayor especialización.","Identificar principios, leyes y modelos aplicables a sistemas de cualquier naturaleza.","Sustituir el método científico por el uso exclusivo de modelos matemáticos."],j:"La TGS busca principios isomórficos aplicables a sistemas físicos, biológicos y sociales (Bertalanffy, 1968)."},
+ {s:1,a:2,q:"La propiedad de sinergia en un sistema significa que:",o:["El comportamiento del todo es exactamente igual a la suma del comportamiento de sus partes.","Cada subsistema puede operar de forma independiente sin afectar al conjunto.","El resultado del todo es superior a la suma del resultado aislado de sus partes."],j:"Sinergia: el todo es mayor que la suma de las partes; 2+2>4."},
+ {s:1,a:0,q:"La homeostasis de un sistema se refiere a:",o:["La capacidad de mantener su equilibrio interno frente a los cambios del entorno.","La tendencia natural al desorden, el desgaste y la desintegración.","La división del sistema en subsistemas ordenados jerárquicamente."],j:"Homeostasis o estado estable: autorregulación para conservar el equilibrio dinámico."},
+ {s:1,a:1,q:"En una organización se presenta entropía negativa (neguentropía) cuando:",o:["Deja de recibir información del entorno y sus procesos se deterioran progresivamente.","Importa energía e información del entorno y se reorganiza para crecer y mantenerse.","Elimina sus mecanismos de retroalimentación para simplificar la operación."],j:"La neguentropía es el proceso inverso a la entropía; el sistema abierto importa recursos para reorganizarse."},
+ {s:1,a:2,q:"El principio de equifinalidad sostiene que:",o:["Todo sistema termina inevitablemente regresando a su estado inicial.","Un sistema solo puede alcanzar su objetivo siguiendo una única vía óptima.","Diferentes condiciones iniciales y distintos caminos pueden conducir al mismo estado final."],j:"Equifinalidad: en sistemas abiertos el estado final puede alcanzarse desde condiciones iniciales diversas."},
+ {s:2,a:1,q:"Un sistema abierto se caracteriza principalmente porque:",o:["No intercambia materia, energía ni información con su medio ambiente.","Intercambia de manera permanente insumos y productos con su entorno.","Funciona solo con recursos internos y carece de fronteras definidas."],j:"El sistema abierto se define por su intercambio permanente con el entorno."},
+ {s:2,a:0,q:"En un sistema de información, las ENTRADAS corresponden a:",o:["Los datos capturados de fuentes internas y externas de la organización.","Los informes gerenciales que se entregan a la dirección.","Las decisiones estratégicas que toma la alta gerencia."],j:"Entrada = captura de datos; proceso = transformación; salida = información."},
+ {s:2,a:2,q:"La retroalimentación (feedback) dentro de un sistema de información permite:",o:["Incrementar el volumen de datos almacenados sin ningún tipo de control.","Eliminar la necesidad de contar con bases de datos estructuradas.","Comparar las salidas con los objetivos y ajustar las entradas y los procesos."],j:"El feedback compara la salida con el estándar y realimenta el proceso para el control."},
+ {s:2,a:0,q:"En el sistema de información de una cooperativa arrocera de Casanare, la FRONTERA del sistema es:",o:["El límite que separa al sistema de su entorno y define qué elementos son internos.","El cerramiento físico de las instalaciones y los cultivos de la cooperativa.","La capacidad máxima de almacenamiento en disco del servidor institucional."],j:"La frontera delimita el sistema respecto del entorno; es un límite lógico, no necesariamente físico."},
+ {s:2,a:1,q:"La diferencia esencial entre DATO e INFORMACIÓN es que:",o:["Los datos ya se encuentran procesados y la información es la materia prima inicial.","Los datos son hechos en bruto y la información es el resultado de procesarlos con significado y contexto.","Son términos equivalentes y pueden emplearse indistintamente."],j:"El dato es el hecho aislado; la información es el dato procesado, con contexto y utilidad para decidir."},
+ {s:3,a:1,q:"Un Sistema de Procesamiento de Transacciones (TPS) apoya fundamentalmente el nivel:",o:["Estratégico de la organización.","Operativo de la organización.","Directivo y de planeación a largo plazo."],j:"El TPS soporta la operación diaria y el nivel operativo de la organización."},
+ {s:3,a:0,q:"El registro automático de cada venta de combustible en una estación de servicio de Aguazul corresponde a un:",o:["TPS.","DSS.","MIS."],j:"Cada venta registrada es una transacción individual del negocio."},
+ {s:3,a:2,q:"Una característica típica de un TPS es:",o:["Entregar información resumida y trimestral para la alta dirección.","Manejar escenarios hipotéticos y modelos del tipo “qué pasaría si”.","Procesar un alto volumen de operaciones repetitivas con datos detallados y gran exactitud."],j:"Alto volumen, repetitividad, detalle, exactitud y disponibilidad son rasgos del TPS."},
+ {s:4,a:1,q:"El propósito principal de un MIS es:",o:["Registrar de forma individual cada transacción que ocurre en el día.","Generar informes periódicos y resúmenes que apoyen el control de la gestión en el nivel táctico.","Automatizar las campañas de mercadeo dirigidas a los clientes."],j:"El MIS entrega reportes estructurados y periódicos para la gerencia media."},
+ {s:4,a:0,q:"Un MIS se alimenta principalmente de:",o:["Los datos consolidados que provienen de los sistemas transaccionales (TPS).","Estimaciones informales y percepciones del mercado.","Modelos matemáticos de optimización no estructurados."],j:"El MIS resume y consolida la información generada por los TPS."},
+ {s:4,a:1,q:"Un informe mensual comparativo de ventas por municipio de Casanare es una salida propia de un:",o:["TPS.","MIS.","CRM operativo."],j:"Es un reporte agregado y periódico para el control de la gestión."},
+ {s:5,a:2,q:"Un DSS está orientado a apoyar decisiones de tipo:",o:["Estructuradas, rutinarias y repetitivas.","Exclusivamente contables y tributarias.","Semiestructuradas y no estructuradas."],j:"El DSS apoya problemas donde no existe un procedimiento único ni predefinido."},
+ {s:5,a:0,q:"Los componentes clásicos de un DSS son:",o:["Base de datos, base de modelos e interfaz de usuario.","Teclado, monitor, impresora y unidad central de proceso.","Nómina, cartera, contabilidad y tesorería."],j:"Subsistema de datos, subsistema de modelos y subsistema de diálogo o interfaz."},
+ {s:5,a:1,q:"El análisis “¿qué ocurriría con la utilidad si el precio del arroz cayera un 15%?” es propio de un:",o:["TPS.","DSS.","Sistema de nómina."],j:"Es un análisis de sensibilidad o escenario what-if, función típica del DSS."},
+ {s:6,a:0,q:"El objetivo central de un ERP es:",o:["Integrar en una base de datos única los procesos y las áreas funcionales de la organización.","Administrar únicamente las campañas de mercadeo y fidelización.","Reemplazar el sistema operativo de los equipos de cómputo de la empresa."],j:"El ERP integra procesos en una base de datos común y única."},
+ {s:6,a:2,q:"Son módulos típicos de un ERP:",o:["Antivirus, cortafuegos y copias de respaldo.","Fuerza de ventas, servicio al cliente y campañas de mercadeo.","Finanzas, inventarios, compras, producción y recursos humanos."],j:"Los módulos del ERP corresponden a las áreas funcionales internas."},
+ {s:6,a:1,q:"Un beneficio esperado al implantar un ERP en una empresa del sector agroindustrial es:",o:["La duplicación intencional de los datos en cada una de las áreas.","La eliminación de las islas de información y la estandarización de los procesos.","La independencia total entre departamentos, sin necesidad de compartir datos."],j:"El ERP elimina la redundancia y las islas de información, estandarizando procesos."},
+ {s:7,a:0,q:"Un CRM se enfoca en:",o:["Gestionar la relación con el cliente a lo largo de todo su ciclo de vida.","Planificar la producción y la capacidad instalada de la planta.","Controlar el inventario de materias primas en la bodega."],j:"El CRM administra la relación con el cliente: captación, venta, servicio y fidelización."},
+ {s:7,a:1,q:"El CRM analítico se encarga de:",o:["Automatizar la operación del centro de contacto y la mesa de ayuda.","Analizar la información del cliente para segmentar mercados y predecir comportamientos.","Emitir la factura de venta y registrar el recaudo."],j:"El CRM analítico explota los datos del cliente (segmentación, minería, predicción)."},
+ {s:7,a:2,q:"La relación entre un ERP y un CRM se describe mejor así:",o:["Son excluyentes: si se implementa uno, el otro no puede utilizarse.","El CRM es un módulo interno del sistema operativo del servidor.","Son complementarios: el ERP se orienta a los procesos internos y el CRM a la relación con el cliente."],j:"ERP: eficiencia interna (back office). CRM: relación con el mercado (front office). Se complementan."}
+];
+const INSTRUCCIONES=[
+ "La prueba consta de 25 preguntas de selección múltiple con única respuesta correcta.",
+ "Rellene completamente el círculo de la opción que considere correcta. Use esfero de tinta negra o azul.",
+ "Cada pregunta tiene un valor de 0.2 puntos, para un total de 5.0. No se descuentan puntos por respuestas incorrectas.",
+ "Las preguntas con tachones, enmendaduras o con más de un círculo marcado se califican como incorrectas.",
+ "Prueba individual. No se permite el uso de dispositivos electrónicos, apuntes ni material de consulta.",
+ "Lea completamente cada enunciado y todas las opciones antes de marcar."];
+
+/* ============ BARAJADO DETERMINÍSTICO (13 CLAVES) ============ */
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const ORDENES={};
+for(let c=1;c<=13;c++){
+  const r=rng(c*48271+20260730);
+  const arr=[...Array(25).keys()];
+  for(let i=24;i>0;i--){const j=Math.floor(r()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  ORDENES[c]=arr;
+}
+const resp=(c,pos)=>"ABC"[PREGUNTAS[ORDENES[c][pos]].a];
+const pad=n=>String(n).padStart(2,"0");
+
+/* ============ UTILIDADES ============ */
+const $=s=>document.querySelector(s);
+const CODIGO_DOCENTE="uniremington15";
+let claveSel=null, claveActual=null, modoMaestra="r", claveDetalle=1;
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2800);}
+function mostrarVista(v){
+  $("#vistaPortal").hidden=v!=="portal";
+  $("#vistaEstudiante").hidden=v!=="estudiante";
+  $("#vistaDocente").hidden=v!=="docente";
+  window.scrollTo({top:0});
+}
+
+/* ============ PORTAL: SELECCIÓN DE CLAVE ============ */
+function seleccionarClave(c){
+  if(!c||c<1||c>13)return false;
+  claveSel=c;
+  document.querySelectorAll(".gcl").forEach(x=>x.classList.toggle("sel",+x.dataset.c===c));
+  $("#inputClave").value=c;
+  $("#selInfo").textContent=pad(c);
+  $("#btnComenzar").disabled=false;
+  return true;
+}
+(function(){
+  const g=$("#gridClaves");
+  for(let c=1;c<=13;c++){
+    const r=rng(c*1013+77);let dots="";for(let i=0;i<12;i++)dots+=`<i class="${r()>.5?"f":""}"></i>`;
+    const b=document.createElement("button");
+    b.className="gcl";b.type="button";b.dataset.c=c;
+    b.innerHTML=`<span class="lbl">CLAVE</span><span class="num">${pad(c)}</span><span class="dots">${dots}</span>`;
+    b.addEventListener("click",()=>seleccionarClave(c));
+    g.appendChild(b);
+  }
+})();
+$("#inputClave").addEventListener("input",e=>{
+  const v=parseInt(e.target.value,10);
+  if(v>=1&&v<=13)seleccionarClave(v);
+});
+$("#inputClave").addEventListener("keydown",e=>{
+  if(e.key!=="Enter")return;
+  const v=parseInt(e.target.value,10);
+  if(v>=1&&v<=13){seleccionarClave(v);iniciarExamen(v);}
+  else toast("Ingrese una clave válida entre 1 y 13");
+});
+$("#btnComenzar").addEventListener("click",()=>{if(claveSel)iniciarExamen(claveSel);});
+
+/* ============ VISTA ESTUDIANTE (SOLO LECTURA) ============ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vis");io.unobserve(e.target);}}),{threshold:.06});
+
+function iniciarExamen(c){
+  claveActual=c;
+  $("#tbClave").textContent=pad(c);
+  $("#claveTitulo").textContent=pad(c);
+  $("#claveGrande").textContent=pad(c);
+  const r=rng(c*1013+77),d=$("#claveDots");d.innerHTML="";
+  for(let i=0;i<12;i++){const s=document.createElement("i");if(r()>.5)s.className="f";d.appendChild(s);}
+  renderPreguntas(c);
+  mostrarVista("estudiante");
+  toast("Clave "+pad(c)+" cargada · Responda en su hoja física");
+}
+function renderPreguntas(c){
+  const orden=ORDENES[c];
+  $("#preguntas").innerHTML=orden.map((qi,pos)=>{
+    const p=PREGUNTAS[qi],col=COLSEC[p.s],sec=SECCIONES[p.s];
+    const ops=p.o.map((o,oi)=>`<div class="op-ro"><span class="circ"></span><span class="lt">${"abc"[oi]})</span><span class="txt">${o}</span></div>`).join("");
+    return `<article class="q">
+      <div class="qn"><span class="qn-num">${pad(pos+1)}</span><span class="chip" style="color:${col}">${sec.tag}</span></div>
+      <div class="qb"><p class="qt">${p.q}</p><div class="ops">${ops}</div></div></article>`;
+  }).join("");
+  document.querySelectorAll(".q").forEach(el=>io.observe(el));
+}
+$("#btnCambiar").addEventListener("click",()=>mostrarVista("portal"));
+$("#btnCambiar2").addEventListener("click",()=>mostrarVista("portal"));
+
+/* ============ ACCESO DOCENTE ============ */
+function verificarDocente(){
+  if($("#codigoDoc").value.trim()===CODIGO_DOCENTE){
+    $("#errDoc").classList.remove("show");$("#codigoDoc").value="";
+    abrirPanel();toast("Acceso concedido · Bienvenido, Mg. Silva");
+  }else{
+    $("#errDoc").classList.add("show");
+    const g=$("#gateDoc");g.classList.remove("shake");void g.offsetWidth;g.classList.add("shake");
+    $("#codigoDoc").select();
+  }
+}
+$("#btnDesbloquear").addEventListener("click",verificarDocente);
+$("#codigoDoc").addEventListener("keydown",e=>{if(e.key==="Enter")verificarDocente();});
+
+function abrirPanel(){
+  mostrarVista("docente");
+  buildMaestra();buildChipsDetalle();buildDetalle();buildRetro();
+  document.querySelectorAll("select.selClave").forEach(sel=>{
+    if(!sel.children.length)for(let c=1;c<=13;c++){const o=document.createElement("option");o.value=c;o.textContent="Clave "+pad(c);sel.appendChild(o);}
+    sel.value=claveActual||1;
+  });
+}
+$("#cerrarPanel").addEventListener("click",()=>mostrarVista("portal"));
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("sel",x===t));
+  ["maestra","detalle","retro","descargas"].forEach(id=>$("#tab-"+id).hidden=(id!==t.dataset.tab));
+}));
+
+/* ---- Tabla maestra ---- */
+function buildMaestra(){
+  let h='<table class="mtable"><thead><tr><th>Pos</th>';
+  for(let c=1;c<=13;c++)h+=`<th data-col="${c}">C${pad(c)}</th>`;
+  h+="</tr></thead><tbody>";
+  for(let pos=0;pos<25;pos++){
+    h+=`<tr><th>${pos+1}</th>`;
+    for(let c=1;c<=13;c++){
+      const qi=ORDENES[c][pos],p=PREGUNTAS[qi],L="ABC"[p.a];
+      const cell=modoMaestra==="r"?L:modoMaestra==="p"?"P"+(qi+1):`P${qi+1}·${L}`;
+      h+=`<td data-col="${c}">${cell}</td>`;
+    }
+    h+="</tr>";
+  }
+  $("#maestra").innerHTML=h+"</tbody></table>";
+}
+$("#segModo").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  modoMaestra=b.dataset.m;
+  document.querySelectorAll("#segModo button").forEach(x=>x.classList.toggle("sel",x===b));
+  buildMaestra();
+});
+$("#maestra").addEventListener("mouseover",e=>{
+  const td=e.target.closest("td");if(!td)return;
+  document.querySelectorAll("#maestra .hl,#maestra .hlrow").forEach(x=>x.classList.remove("hl","hlrow"));
+  document.querySelectorAll(`#maestra [data-col="${td.dataset.col}"]`).forEach(x=>x.classList.add("hl"));
+  td.parentElement.classList.add("hlrow");
+});
+$("#maestra").addEventListener("mouseleave",()=>{
+  document.querySelectorAll("#maestra .hl,#maestra .hlrow").forEach(x=>x.classList.remove("hl","hlrow"));
+});
+$("#copiar").addEventListener("click",async()=>{
+  let tsv="Pos\t"+Array.from({length:13},(_,i)=>"Clave "+(i+1)).join("\t")+"\n";
+  for(let pos=0;pos<25;pos++){tsv+=(pos+1);for(let c=1;c<=13;c++)tsv+="\t"+resp(c,pos);tsv+="\n";}
+  try{await navigator.clipboard.writeText(tsv);toast("Tabla maestra copiada (lista para Excel)");}
+  catch{toast("No se pudo copiar en este navegador");}
+});
+
+/* ---- Detalle por clave ---- */
+function buildChipsDetalle(){
+  const w=$("#chipsDetalle");
+  for(let c=1;c<=13;c++){
+    const b=document.createElement("button");
+    b.className="cchip"+(c===claveDetalle?" sel":"");b.textContent=pad(c);b.type="button";
+    b.addEventListener("click",()=>{claveDetalle=c;
+      document.querySelectorAll(".cchip").forEach(x=>x.classList.toggle("sel",x.textContent===pad(claveDetalle)));
+      buildDetalle();});
+    w.appendChild(b);
+  }
+}
+function buildDetalle(){
+  let h=`<table class="mtable dtable"><thead><tr><th>Posición</th><th>Preg. original</th><th>Sección</th><th>Respuesta</th></tr></thead><tbody>`;
+  ORDENES[claveDetalle].forEach((qi,pos)=>{
+    const s=SECCIONES[PREGUNTAS[qi].s];
+    h+=`<tr><td>${pos+1}</td><td>Pregunta ${qi+1}</td><td>${s.rom} · ${s.nombre}</td><td>${"ABC"[PREGUNTAS[qi].a]}</td></tr>`;
+  });
+  $("#detalle").innerHTML=h+"</tbody></table>";
+}
+
+/* ---- Retroalimentación ---- */
+function buildRetro(){
+  let h="";
+  for(let s=1;s<=7;s++){
+    const sec=SECCIONES[s];
+    h+=`<div class="retro-sec"><h4 style="color:${COLSEC[s]}">SECCIÓN ${sec.rom} · ${sec.nombre}</h4>`;
+    PREGUNTAS.forEach((p,i)=>{
+      if(p.s!==s)return;
+      h+=`<div class="retro-item"><span class="ans-badge">${"ABC"[p.a]}</span><div>
+        <p class="ok">${i+1}. ${p.o[p.a]}</p><p class="jus">${p.j}</p></div></div>`;
+    });
+    h+="</div>";
+  }
+  $("#retro").innerHTML=h;
+}
+
+/* ============ GENERACIÓN DE PDF ============ */
+const M=15,CW=180,VIN=[125,31,48],INK=[28,31,38],BLANCO=[255,255,255];
+function nuevoDoc(fmt){if(!window.jspdf){toast("⚠ No se cargó el generador de PDF (revise su conexión)");return null;}return new window.jspdf.jsPDF({unit:"mm",format:fmt||"a4"});}
+function banda(doc,c){
+  doc.setFillColor(...VIN);doc.rect(0,0,210,2.5,"F");
+  if(c){doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(140);
+    doc.text("Sistemas de Información · Parcial 2026-2 · CLAVE "+pad(c),M,9);
+    doc.setDrawColor(205);doc.setLineWidth(.2);doc.line(M,11,195,11);}
+  return 17;
+}
+function chk(doc,y,need){if(y+need>280){doc.addPage();return banda(doc);}return y;}
+function campo(doc,x,y,w,label,valor){
+  doc.setFont("helvetica","bold");doc.setFontSize(7.5);doc.setTextColor(110);
+  const lbl=label.toUpperCase();doc.text(lbl,x,y);
+  const lw=doc.getTextWidth(lbl);
+  doc.setDrawColor(140);doc.setLineWidth(.25);doc.setLineDashPattern([.9,.9],0);
+  doc.line(x+lw+2,y+.9,x+w,y+.9);doc.setLineDashPattern([],0);
+  if(valor){doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(...INK);doc.text(valor,x+lw+4,y);}
+}
+function tabla(doc,x,y,anchos,cab,cuerpo,o={}){
+  const rh=o.rh||6.6,fs=o.fs||7.8,padd=1.8,total=anchos.reduce((a,b)=>a+b,0);let yy=y;
+  function fila(cells,fondo,negrita,color){
+    if(yy+rh>283){doc.addPage();yy=17;fila(cab,VIN,true,BLANCO);}
+    let xx=x;
+    if(fondo){doc.setFillColor(...fondo);doc.rect(x,yy,total,rh,"F");}
+    cells.forEach((c,i)=>{
+      doc.setDrawColor(175);doc.setLineWidth(.15);doc.rect(xx,yy,anchos[i],rh);
+      doc.setFont("helvetica",negrita?"bold":"normal");doc.setFontSize(fs);
+      doc.setTextColor(...(color||INK));doc.text(String(c),xx+padd,yy+rh-2.2);
+      xx+=anchos[i];
+    });
+    yy+=rh;
+  }
+  fila(cab,VIN,true,BLANCO);
+  cuerpo.forEach((r,i)=>fila(r,i%2?[244,240,229]:null,false));
+  return yy;
+}
+function escribirExamen(doc,c){
+  const orden=ORDENES[c];let y=14;
+  doc.setFillColor(...VIN);doc.rect(0,0,210,2.5,"F");
+  doc.setTextColor(...INK);doc.setFont("helvetica","bold");doc.setFontSize(10);
+  doc.text("CORPORACIÓN UNIVERSITARIA REMINGTON — SEDE YOPAL",M,y);y+=4.4;
+  doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(100);
+  doc.text("Facultad de Ingenierías — Programa de Ingeniería de Sistemas · Asignatura: Sistemas de Información",M,y);y+=5.8;
+  doc.setTextColor(...INK);doc.setFont("helvetica","bold");doc.setFontSize(13);
+  doc.text("EXAMEN PARCIAL ESCRITO",M,y);
+  doc.setDrawColor(...VIN);doc.setLineWidth(.7);doc.rect(150,y-8.5,45,12.5);
+  doc.setFontSize(6.8);doc.setTextColor(...VIN);doc.text("CLAVE ASIGNADA",172.5,y-5.6,{align:"center"});
+  doc.setFont("courier","bold");doc.setFontSize(15);doc.text(pad(c),172.5,y+1.8,{align:"center"});
+  y+=3.6;
+  doc.setDrawColor(...VIN);doc.setLineWidth(.5);doc.line(M,y,195,y);doc.setLineWidth(.2);doc.line(M,y+1,195,y+1);
+  y+=7;
+  const campos=[["Estudiante",""],["Código",""],["Programa",""],["Semestre",""],["Fecha",""],["Duración","90 minutos"],["Docente","Mg. Julio Andrés Silva Aragón"],["Calificación",""]];
+  for(let i=0;i<8;i+=2){campo(doc,M,y,86,campos[i][0],campos[i][1]);campo(doc,109,y,86,campos[i+1][0],campos[i+1][1]);y+=8;}
+  y+=1;
+  const items=INSTRUCCIONES.map(t=>doc.splitTextToSize(t,CW-14));
+  const hItems=items.reduce((a,l)=>a+l.length*3.1+1.3,0),boxH=9+hItems+2;
+  doc.setFillColor(248,244,232);doc.setDrawColor(190);doc.setLineWidth(.3);doc.rect(M,y,CW,boxH,"FD");
+  doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...VIN);
+  doc.text("INSTRUCCIONES GENERALES",M+4,y+5.6);
+  let yy=y+10;
+  items.forEach((l,i)=>{doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(...INK);
+    doc.text((i+1)+".",M+4,yy);doc.text(l,M+8.5,yy);yy+=l.length*3.1+1.3;});
+  y+=boxH+7;
+  orden.forEach((qi,pos)=>{
+    const p=PREGUNTAS[qi],s=SECCIONES[p.s];
+    if(y>266){doc.addPage();y=banda(doc,c);}
+    doc.setFont("helvetica","bold");doc.setFontSize(9.5);doc.setTextColor(...VIN);doc.text((pos+1)+".",M,y);
+    doc.setFontSize(6.3);doc.setTextColor(160);doc.text(s.tag,195,y,{align:"right"});
+    doc.setTextColor(...INK);doc.setFontSize(9);
+    const en=doc.splitTextToSize(p.q,CW-8);doc.text(en,M+7,y);
+    y+=en.length*4.2+1.5;
+    p.o.forEach((o,oi)=>{
+      if(y>273){doc.addPage();y=banda(doc,c);}
+      doc.setFont("helvetica","normal");doc.setFontSize(8.8);
+      const ol=doc.splitTextToSize("abc"[oi]+")   "+o,CW-15);
+      doc.text(ol,M+11,y);y+=ol.length*3.9+1.6;
+    });
+    y+=3.4;
+  });
+  if(y>260){doc.addPage();y=banda(doc,c);}
+  doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...VIN);
+  doc.text("FIN DE LA PRUEBA — Verifique que haya respondido las 25 preguntas.",105,y,{align:"center"});
+  y+=9;doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(...INK);
+  doc.text("Firma del estudiante: ___________________________________",M,y);
+}
+function piePagina(doc,etiqueta,numerar){
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);
+    doc.setFillColor(...VIN);doc.rect(0,294.5,210,2.5,"F");
+    doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(130);
+    doc.text(etiqueta,M,291.5);
+    if(numerar)doc.text("Página "+i+" de "+n,195,291.5,{align:"right"});}
+}
+
+/* ---- HOJAS DE RESPUESTAS · 13 TABLAS SIN REPETIR (3 por página carta) ---- */
+function dibujarHoja(doc,c,slot){
+  const W=215.9, MX=7.4, GAP=4.7, H=85, CW=W-2*MX;
+  const x=MX, y0=7.4+slot*(H+GAP);
+  doc.setDrawColor(90);doc.setLineWidth(.35);doc.rect(x,y0,CW,H);
+  doc.setFillColor(...VIN);doc.rect(x,y0,CW,8,"F");
+  doc.setFont("helvetica","bold");doc.setFontSize(8.2);doc.setTextColor(255,255,255);
+  doc.text("HOJA DE RESPUESTAS · SISTEMAS DE INFORMACIÓN · PARCIAL 2026-2",x+3,y0+5.3);
+  doc.setFillColor(255,255,255);doc.rect(x+CW-36,y0+1.3,33,5.4,"F");
+  doc.setDrawColor(...VIN);doc.setLineWidth(.4);doc.rect(x+CW-36,y0+1.3,33,5.4);
+  doc.setFont("courier","bold");doc.setFontSize(9.5);doc.setTextColor(...VIN);
+  doc.text("CLAVE "+pad(c),x+CW-19.5,y0+5.2,{align:"center"});
+  const fy=y0+13.8;
+  doc.setFont("helvetica","bold");doc.setFontSize(7.3);doc.setTextColor(...INK);
+  doc.text("NOMBRE:",x+3,fy);
+  let lw=doc.getTextWidth("NOMBRE:");
+  doc.setDrawColor(120);doc.setLineWidth(.25);doc.setLineDashPattern([.9,.9],0);
+  doc.line(x+3+lw+2,fy+1,x+116,fy+1);
+  doc.text("DOCUMENTO DE IDENTIDAD:",x+121,fy);
+  lw=doc.getTextWidth("DOCUMENTO DE IDENTIDAD:");
+  doc.line(x+121+lw+2,fy+1,x+CW-3,fy+1);
+  doc.setLineDashPattern([],0);
+  doc.setFont("helvetica","italic");doc.setFontSize(6.3);doc.setTextColor(110);
+  const ins=doc.splitTextToSize("Rellene completamente el círculo de la opción que considere correcta. Use esfero de tinta negra o azul. Marque una única opción por pregunta; con tachones o doble marca se califica como incorrecta.",CW-6);
+  doc.text(ins,x+3,y0+18.4);
+  const gy=y0+23.2, ry0=gy+5, rowH=4.2;
+  const bx1=x+8, bx2=x+CW/2+8, offs=[11,23,35];
+  doc.setDrawColor(200);doc.setLineWidth(.2);doc.line(x+CW/2,gy-3,x+CW/2,y0+H-3);
+  [bx1,bx2].forEach(bx=>{
+    doc.setFont("helvetica","bold");doc.setFontSize(6);doc.setTextColor(130);
+    doc.text("PREG.",bx,gy);
+    doc.setFontSize(7.5);doc.setTextColor(...INK);
+    offs.forEach((o,i)=>doc.text("ABC"[i],bx+o,gy,{align:"center"}));
+  });
+  for(let i=0;i<13;i++){
+    const ry=ry0+i*rowH;
+    doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...INK);
+    doc.text(String(i+1),bx1+5,ry,{align:"right"});
+    offs.forEach(o=>{doc.setDrawColor(...INK);doc.setLineWidth(.35);doc.circle(bx1+o,ry-1.35,1.75,"S");});
+    if(i<12){
+      doc.text(String(14+i),bx2+5,ry,{align:"right"});
+      offs.forEach(o=>{doc.setDrawColor(...INK);doc.setLineWidth(.35);doc.circle(bx2+o,ry-1.35,1.75,"S");});
+    }else{
+      doc.setFont("helvetica","bold");doc.setFontSize(6.8);doc.setTextColor(...INK);
+      doc.text("FIRMA:",bx2,ry);
+      doc.setDrawColor(120);doc.setLineWidth(.25);doc.setLineDashPattern([.9,.9],0);
+      doc.line(bx2+15,ry+.8,bx2+48,ry+.8);doc.setLineDashPattern([],0);
+    }
+  }
+  doc.setFont("helvetica","normal");doc.setFontSize(6);doc.setTextColor(130);
+  doc.text("Clave "+pad(c)+" · Verifique que marcó las 25 preguntas · Valor por pregunta: 0.2 · Total: 5.0",x+3,y0+H-2.6);
+  if(slot<2 && c<13){
+    const yc=y0+H+GAP/2;
+    doc.setDrawColor(150);doc.setLineWidth(.25);doc.setLineDashPattern([2.2,2.2],0);
+    doc.line(0,yc,W,yc);doc.setLineDashPattern([],0);
+    doc.setFillColor(243,241,233);doc.rect(W/2-14,yc-2.4,28,4.8,"F");
+    doc.setFont("helvetica","bold");doc.setFontSize(5.8);doc.setTextColor(140);
+    doc.text("RECORTAR",W/2,yc+1,{align:"center"});
+  }
+}
+function pdfHojasRespuestas(){
+  const doc=nuevoDoc("letter");if(!doc)return;
+  toast("Generando las 13 hojas de respuestas (sin repetir)…");
+  let slot=0;
+  for(let c=1;c<=13;c++){
+    if(slot===0&&c>1)doc.addPage();
+    dibujarHoja(doc,c,slot);
+    slot=(slot+1)%3;
+  }
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);
+    doc.setFont("helvetica","normal");doc.setFontSize(5.8);doc.setTextColor(150);
+    doc.text("Hojas de respuestas · Parcial Sistemas de Información 2026-2 · 13 claves sin repetir · 3 por página carta",107.95,277.6,{align:"center"});
+    doc.text("Página "+i+" de "+n,208.5,277.6,{align:"right"});
+  }
+  doc.save("Hojas_Respuestas_13_Claves.pdf");
+  toast("✔ 13 hojas descargadas (una por clave · 3 por página · "+n+" páginas carta)");
+}
+
+/* ---- Exámenes y clave de respuestas ---- */
+function pdfExamen(c){
+  const doc=nuevoDoc();if(!doc)return;
+  toast("Generando PDF de la Clave "+pad(c)+"…");
+  escribirExamen(doc,c);
+  piePagina(doc,"Sistemas de Información · Parcial 2026-2 · CLAVE "+pad(c),true);
+  doc.save("Parcial_SI_2026-2_Clave_"+pad(c)+".pdf");
+  toast("✔ PDF de la Clave "+pad(c)+" descargado");
+}
+function pdfPaquete(){
+  const doc=nuevoDoc();if(!doc)return;
+  toast("Generando paquete con 13 exámenes…");
+  const rangos=[];
+  for(let c=1;c<=13;c++){
+    if(c>1)doc.addPage();
+    const ini=doc.getNumberOfPages();
+    escribirExamen(doc,c);
+    rangos.push([ini,doc.getNumberOfPages(),c]);
+  }
+  rangos.forEach(([ini,fin,c])=>{for(let p=ini;p<=fin;p++){doc.setPage(p);
+    doc.setFillColor(...VIN);doc.rect(0,294.5,210,2.5,"F");
+    doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(130);
+    doc.text("Sistemas de Información · Parcial 2026-2 · CLAVE "+pad(c),M,291.5);}});
+  doc.save("Parcial_SI_2026-2_13_Claves.pdf");
+  toast("✔ Paquete de 13 exámenes descargado");
+}
+function pdfRespuestas(){
+  const doc=nuevoDoc();if(!doc)return;
+  toast("Generando clave de respuestas y retroalimentación…");
+  let y=16;
+  doc.setFillColor(...VIN);doc.rect(0,0,210,2.5,"F");
+  doc.setFont("helvetica","bold");doc.setFontSize(14);doc.setTextColor(...INK);
+  doc.text("CLAVE DE RESPUESTAS Y RETROALIMENTACIÓN",M,y);y+=6;
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(100);
+  doc.text("Sistemas de Información · 2026-2 · Docente: Mg. Julio Andrés Silva Aragón",M,y);y+=6;
+  doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...VIN);
+  doc.text("USO EXCLUSIVO DEL DOCENTE · Valor por pregunta: 0.2 — Total: 5.0",M,y);y+=7;
+  doc.setDrawColor(...VIN);doc.setLineWidth(.5);doc.rect(M,y-4.5,86,8);
+  doc.setFont("courier","bold");doc.setFontSize(9);doc.setTextColor(...INK);
+  doc.text("Código de acceso: uniremington15",M+3,y+1);y+=10;
+  doc.setFont("helvetica","bold");doc.setFontSize(10.5);
+  doc.text("TABLA MAESTRA — Respuesta correcta por posición",M,y);y+=3;
+  const anchosM=[12];for(let i=0;i<13;i++)anchosM.push((CW-12)/13);
+  const cabM=["Pos"];for(let c=1;c<=13;c++)cabM.push("C"+pad(c));
+  const cuerpoM=[];
+  for(let pos=0;pos<25;pos++){const f=[String(pos+1)];for(let c=1;c<=13;c++)f.push(resp(c,pos));cuerpoM.push(f);}
+  y=tabla(doc,M,y,anchosM,cabM,cuerpoM,{rh:6.4,fs:7.5})+9;
+  for(let c=1;c<=13;c++){
+    if(y>232){doc.addPage();y=17;}
+    doc.setFont("helvetica","bold");doc.setFontSize(9.5);doc.setTextColor(...VIN);
+    doc.text("CLAVE "+pad(c)+" — Orden de preguntas y respuesta correcta",M,y);y+=3;
+    const cuerpo=ORDENES[c].map((qi,pos)=>[String(pos+1),"Pregunta "+(qi+1),SECCIONES[PREGUNTAS[qi].s].rom+" · "+SECCIONES[PREGUNTAS[qi].s].nombre,"ABC"[PREGUNTAS[qi].a]]);
+    y=tabla(doc,M,y,[16,26,110,28],["Pos","Preg. original","Sección","Respuesta"],cuerpo,{rh:5.8,fs:7.2})+8;
+  }
+  doc.addPage();y=banda(doc);
+  doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(...INK);
+  doc.text("JUSTIFICACIÓN POR PREGUNTA",M,y+3);y+=9;
+  for(let s=1;s<=7;s++){
+    const sec=SECCIONES[s];
+    y=chk(doc,y,10);
+    doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...sec.rgb);
+    doc.text("SECCIÓN "+sec.rom+". "+sec.nombre.toUpperCase(),M,y);y+=5.5;
+    PREGUNTAS.forEach((p,i)=>{
+      if(p.s!==s)return;
+      const l1=doc.splitTextToSize((i+1)+". Respuesta correcta: "+"abc"[p.a]+") "+p.o[p.a],CW-6);
+      const l2=doc.splitTextToSize(p.j,CW-6);
+      y=chk(doc,y,l1.length*3.8+l2.length*3.4+5);
+      doc.setFont("helvetica","bold");doc.setFontSize(8.3);doc.setTextColor(...INK);
+      doc.text(l1,M+2,y);y+=l1.length*3.8+1;
+      doc.setFont("helvetica","normal");doc.setFontSize(7.6);doc.setTextColor(110);
+      doc.text(l2,M+2,y);y+=l2.length*3.4+3.5;
+    });
+    y+=2;
+  }
+  piePagina(doc,"Clave de Respuestas y Retroalimentación · Sistemas de Información 2026-2 · CONFIDENCIAL",true);
+  doc.save("Clave_Respuestas_SI_2026-2.pdf");
+  toast("✔ Clave de respuestas y retroalimentación descargada");
+}
+$("#dlExamen").addEventListener("click",()=>pdfExamen(+document.querySelector("#dlExamen").closest(".dl-row").querySelector("select").value));
+$("#dlPaquete").addEventListener("click",pdfPaquete);
+$("#dlHojas").addEventListener("click",pdfHojasRespuestas);
+$("#dlRespuestas").addEventListener("click",pdfRespuestas);
+
+/* ---- Inicio ---- */
+mostrarVista("portal");
+</script>
+</body>
+</html>
